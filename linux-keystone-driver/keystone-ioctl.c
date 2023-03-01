@@ -34,6 +34,14 @@ int keystone_create_enclave(struct file *filep, unsigned long arg)
   return 0;
 }
 
+int keystone_start_utm_map(unsigned long arg)
+{
+  struct enclave *enclave;
+  struct keystone_ioctl_create_enclave *enclp = (struct keystone_ioctl_create_enclave *) arg;
+  enclave = get_enclave_by_id(enclp->eid);
+  enclave->is_init = false;
+  return 0;
+}
 
 int keystone_finalize_enclave(unsigned long arg)
 {
@@ -259,6 +267,10 @@ long keystone_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
     case KEYSTONE_IOC_UTM_INIT:
       ret = utm_init_ioctl(filep, (unsigned long) data);
       break;
+
+    case KEYSTONE_IOC_UTM_MAP_START:
+      ret = keystone_start_utm_map((unsigned long) data);
+      break;
     default:
       return -ENOSYS;
   }
@@ -290,3 +302,4 @@ int keystone_release(struct inode *inode, struct file *file) {
   }
   return 0;
 }
+

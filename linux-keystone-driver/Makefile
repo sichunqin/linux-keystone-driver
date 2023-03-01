@@ -10,6 +10,8 @@ ifneq ($(KERNELRELEASE),)
 	obj-m += keystone-driver.o
 else
 
+ccflags-y += -g -DDEBUG
+
 PWD := $(shell pwd)
 LINUXSRC := $(PWD)/../linux
 
